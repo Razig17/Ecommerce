@@ -1,0 +1,177 @@
+{% extends "index.html" %}
+{% block content %}
+
+
+                <!-- NAVIGATION -->
+<nav id="navigation">
+        <!-- container -->
+        <div class="container">
+                <!-- responsive-nav -->
+                <div id="responsive-nav">
+                        <!-- NAV -->
+                        <ul class="main-nav nav navbar-nav">
+                                <li ><a href="/">Home</a></li>
+                                <li><a href="/store">All</a></li>
+                                <li><a href="laptops">Laptops</a></li>
+                                <li ><a href="smartphones">Smartphones</a></li>
+                        </ul>
+                        <!-- /NAV -->
+                </div>
+                <!-- /responsive-nav -->
+        </div>
+        <!-- /container --> 
+		<!-- BREADCRUMB -->
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<ul class="breadcrumb-tree">
+							<li><a href="/">Home</a></li>
+							<li><a href="/store">All Categories</a></li>
+                                                        <li><a href="{{product.category}}">{{product.category}}</a></li>
+							<li class="active">{{product.name}}</li>
+						</ul>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /BREADCRUMB -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+
+                                <div class="row">
+					<!-- Product main img -->
+					<div class="col-md-6 ">
+						<div id="product-main-img">
+							<div class="product-preview">
+								<img src= "{{ product.image.url }}" alt="">
+							</div>
+
+							
+						</div>
+					</div>
+					<!-- /Product main img -->
+                                       
+
+					<!-- Product details -->
+					<div class="col-md-6">
+						<div class="product-details">
+							<h2 class="product-name">{{ product.name }}</h2>
+							
+							<div>
+								<h3 class="product-price">${{ product.price }} </h3>
+                                                                {% if product.stock > 0 %}
+								<span class="product-available">In Stock</span>
+                                                                {% else %}
+                                                                <span class="product-available">Out of Stock</span>
+                                                                {% endif %}
+							</div>
+                                                        <p>{{ product.description }}</p>
+
+							
+
+							<div class="add-to-cart">
+								<div class="qty-label">
+									Qty
+									<div class="input-number">
+                                                                                <input type="number" value="1" id="quantity-input">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+								</div>
+								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+							</div>
+                                                        <script>
+                                                                document.addEventListener('DOMContentLoaded', function() {
+                                                                    const qtyUp = document.querySelector('.qty-up');
+                                                                    const qtyDown = document.querySelector('.qty-down');
+                                                                    const qtyInput = document.getElementById('quantity-input');
+                                                            
+                                                                    qtyUp.addEventListener('click', function() {
+                                                                        qtyInput.value = parseInt(qtyInput.value) + 1;
+                                                                    });
+                                                            
+                                                                    qtyDown.addEventListener('click', function() {
+                                                                        if (parseInt(qtyInput.value) > 0) {
+                                                                            qtyInput.value = parseInt(qtyInput.value) - 1;
+                                                                        }
+                                                                    });
+                                                                });
+                                                            </script>
+
+							<ul class="product-btns">
+								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+							</ul>
+
+							<ul class="product-links">
+								<li>Category:</li>
+								<li><a href="{{ product.category }}">{{ product.category }}</a></li>
+							</ul>
+
+
+						</div>
+					</div>
+					<!-- /Product details -->
+
+					<!-- Product tab -->
+					<div class="col-md-12">
+						<div id="product-tab">
+							<!-- product tab nav -->
+							<ul class="tab-nav">
+								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+								<li><a data-toggle="tab" href="#tab2">Details</a></li>
+							</ul>
+							<!-- /product tab nav -->
+
+							<!-- product tab content -->
+							<div class="tab-content">
+								<!-- tab1  -->
+								<div id="tab1" class="tab-pane fade in active">
+									<div class="row">
+										<div class="col-md-12">
+                                                                                <p>{{ product.description }}</p>
+										</div>
+									</div>
+								</div>
+								<!-- /tab1  -->
+
+								<!-- tab2  -->
+								<div id="tab2" class="tab-pane fade in">
+									<div class="row">
+										<div class="col-md-12">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+										</div>
+									</div>
+								</div>
+								<!-- /tab2  -->
+
+							</div>
+							<!-- /product tab content  -->
+						</div>
+					</div>
+					<!-- /product tab -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+
+		</div>
+		<!-- /Section -->
+
+		<!-- jQuery Plugins -->
+		
+
+
+</html>
+
+{% endblock %}
