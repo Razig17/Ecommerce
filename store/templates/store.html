@@ -19,6 +19,15 @@
         <!-- /responsive-nav -->
 </div>
 <!-- /container -->
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ message }}
+      </div>
+{% endfor %}
+{% endif %}
+
 </nav>
 <!-- /NAVIGATION -->
 <!-- SECTION -->
@@ -46,7 +55,6 @@
                                                                 <p class="product-category">{{product.category}}</p>
                                                                 <h3 class="product-name"><a href="{{product.id}}">{{product.name}}</a></h3>
                                                                 <h4 class="product-price">${{product.price}}</h4>
-
                                                                 
                                                                 <div class="product-btns">
                                                                         <a href="/wishlist">
