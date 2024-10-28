@@ -16,7 +16,7 @@
  		<!-- Bootstrap -->
  		<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
-                
+                                
  		<!-- Font Awesome Icon -->
  		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 
@@ -38,7 +38,13 @@
 				<div class="container">
                                         <ul class="header-links pull-right">
 						<li><div style=" color: #FFF"><i class="fa fa-dollar"></i> USD</div></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+                                                {% if user.is_authenticated %}
+						<li><a href="{% url 'login' %}""><i class="fa fa-user-o"></i> My Account</a></li>
+                                                <li><a href="{% url 'logout' %}""><i class="fa fa-sign-out"></i>Logout</a></li>
+                                                {% else %}
+                                                <li><a href="{% url 'register' %}""><i class="fa fa-sign-in"></i>Login/Register</a></li>
+                                                {% endif %}
+                                                
 					</ul>
                                 </div>
 			</div>
@@ -63,7 +69,7 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form action="/store/" method="GET">
+								<form action="{% url 'store' %}" method="GET">
 									<select class="input-select" name="category">
 										<option value="0">All Categories</option>
                                                                                 <option value="laptops">Laptops</option>
@@ -112,7 +118,6 @@
 									</div>
 								</div>
 								<!-- /Cart -->
-
 								<!-- Menu Toogle -->
 								<div class="menu-toggle">
 									<a href="#">
@@ -121,21 +126,26 @@
 									</a>
 								</div>
 								<!-- /Menu Toogle -->
+
+                                        
 							</div>
 						</div>
 						<!-- /ACCOUNT -->
+                                                 
 					</div>
 					<!-- row -->
+                                         
 				</div>
 				<!-- container -->
 			</div>
 			<!-- /MAIN HEADER -->
+                         
 		</header>
 		<!-- /HEADER -->
-		
+                 
                 {% block content %}
                 {% endblock %}
-		
+                
 
 		<!-- FOOTER -->
 		<footer id="footer">
@@ -161,8 +171,8 @@
 							<div class="footer">
 								<h3 class="footer-title">Categories</h3>
 								<ul class="footer-links">
-									<li><a href="laptops">Laptops</a></li>
-									<li><a href="smartphones">smartphones</a></li>
+									<li><a href="{% url 'laptops' %}">Laptops</a></li>
+									<li><a href="{% url 'smartphones' %}">smartphones</a></li>
 
 								</ul>
 							</div>
@@ -176,7 +186,7 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="#">My Account</a></li>
+									<li><a href="{% url 'register' %}">My Account</a></li>
 									<li><a href="#">View Cart</a></li>
 									<li><a href="#">Wishlist</a></li>
 
