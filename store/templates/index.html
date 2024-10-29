@@ -39,10 +39,10 @@
                                         <ul class="header-links pull-right">
 						<li><div style=" color: #FFF"><i class="fa fa-dollar"></i> USD</div></li>
                                                 {% if user.is_authenticated %}
-						<li><a href="{% url 'login' %}""><i class="fa fa-user-o"></i> My Account</a></li>
-                                                <li><a href="{% url 'logout' %}""><i class="fa fa-sign-out"></i>Logout</a></li>
+						<li><a href="{% url 'my_account' %}"><i class="fa fa-user-o"></i> My Account</a></li>
+                                                <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a></li>
                                                 {% else %}
-                                                <li><a href="{% url 'register' %}""><i class="fa fa-sign-in"></i>Login/Register</a></li>
+                                                <li><a href="{% url 'register' %}"><i class="fa fa-sign-in"></i>Login/Register</a></li>
                                                 {% endif %}
                                                 
 					</ul>
@@ -186,7 +186,7 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="{% url 'register' %}">My Account</a></li>
+									<li><a href="{% url 'my_account' %}">My Account</a></li>
 									<li><a href="#">View Cart</a></li>
 									<li><a href="#">Wishlist</a></li>
 
