@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Product
+from .models import Product, Customer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import RegisterForm
+from .forms import RegisterForm, CustomerForm
+
 
 def index(request):
     return render(request, "index.html" , {})
@@ -59,36 +60,38 @@ def logout_user(request):
     return redirect("store")
 
 
-# def register_user(request):
-#     if request.method == "POST":
-#         username = request.POST["username"]
-#         email = request.POST["email"]
-#         password = request.POST["password"]
-#         if User.objects.filter(username=username).exists():
-#             messages.success(request, "That username is taken")
-#             return redirect("register")
-#         else:
-#             if User.objects.filter(email=email).exists():
-#                 messages.success(request, "That email is being used")
-#                 return redirect("register")
-#             else:
-#                 user = User.objects.create_user(username=username, email=email, password=password)
-#                 user.save()
-#                 login(request, user)
-#                 messages.success(request, "You are now logged in")
-#                 return redirect("store")
-#     return render(request, "login.html" , {})
-
 def register_user(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "You are now logged in")
-            return redirect("store")
+            messages.success(request, "You’ve successfully registered! Please complete your profile")
+            return redirect("my_account")
         else:
             messages.error(request, "Please correct the error .")
     else:
         form = RegisterForm()
     return render(request, "login.html" , {"form": form})
+
+
+def my_account(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You need to be logged in")
+        return redirect("login")
+    
+    elif request.method == 'POST':
+        user = Customer.objects.get(user__id=request.user.id)   
+        form = CustomerForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account updated")
+        else:
+            for msg in form.errors:
+                messages.error(request, msg)
+                messages.error(request, form.errors[msg])
+            render(request, "my_account.html" , {"form": form})
+
+    user = Customer.objects.get(user__id=request.user.id)        
+    form = CustomerForm(instance=user)
+    return render(request, "my_account.html" , {"form": form})
