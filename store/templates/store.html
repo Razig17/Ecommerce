@@ -1,6 +1,8 @@
 {% extends "index.html" %}
 {% block content %}
-
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
 <!-- NAVIGATION -->
 <nav id="navigation">
 <!-- container -->
@@ -71,17 +73,22 @@
                                                                 </div>
                                                         </div>
                                                         <div class="add-to-cart">
-                                                                <button class="add-to-cart-btn"><i
+                                                                <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                                                                        {% csrf_token %}
+                                                                       
+                                                                        <button class="add-to-cart-btn" data-product_id="{{product.id}}"><i
                                                                                 class="fa fa-shopping-cart"></i> add to
                                                                         cart</button>
+                                                                    </form>
+                                                                
                                                         </div>
                                                 </div>
                                         </div>
                                         <!-- /product -->
                                         {% endfor %}
-
+                                        
                             
-
+                            
                                         
                                 </div>
                                 <!-- /store products -->

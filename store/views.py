@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegisterForm, CustomerForm
-
+from .cart import Cart
+from django.http import JsonResponse
 
 def index(request):
     return render(request, "index.html" , {})
@@ -95,3 +96,42 @@ def my_account(request):
     user = Customer.objects.get(user__id=request.user.id)        
     form = CustomerForm(instance=user)
     return render(request, "my_account.html" , {"form": form})
+
+
+def cart(request):
+    return render(request, "cart.html" , {})
+
+
+def add_to_cart(request, id):
+    if request.method == "POST":    
+        qty = request.POST.get('qty', 1)
+        cart = Cart(request)
+        product = Product.objects.get(id=id)
+        cart.add_item(product, (qty))
+        msg = 'Product added to cart'
+        if int(qty) > 1:
+            msg = 'Products added to cart'
+        return JsonResponse({"qty": cart.__len__(), "total_price": cart.get_total_price(), "msg": msg})
+    
+def remove_from_cart(request, id):
+    cart = Cart(request)
+    product = Product.objects.get(id=id)
+    cart.remove_item(product)
+    messages.success(request, "Product removed from cart")
+    return redirect("cart")
+
+def update_cart(request, id):
+    if request.method == "POST":
+        qty = request.POST.get('qty', 1)
+        cart = Cart(request)
+        product = Product.objects.get(id=id)
+        cart.update_quantity(product, int(qty))
+        msg = 'Product quantity updated'
+        return JsonResponse({"total_price": cart.get_total_price(), "msg": msg, "qty": cart.__len__()})
+
+def clear_cart(request):
+    cart = Cart(request)
+    cart.clear()
+    messages.success(request, "Cart cleared")
+    return redirect("cart")
+

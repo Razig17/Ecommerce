@@ -64,7 +64,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="add-to-cart">
-                                                                <button class="add-to-cart-btn"><i
+                                                                {% csrf_token %}
+                                                                <button class="add-to-cart-btn" data-product_id="{{product.id}}"><i
                                                                                 class="fa fa-shopping-cart"></i> add to
                                                                         cart</button>
                                                         </div>
