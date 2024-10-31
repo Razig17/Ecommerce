@@ -20,6 +20,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
+    details = models.TextField(blank=True, default="")
     stock = models.IntegerField(default=0)
     image = models.ImageField(upload_to='product/images/', default='images/default.jpg')
 
