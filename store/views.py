@@ -52,7 +52,7 @@ def login_user(request):
             return redirect("store")
         else:
             messages.success(request, "Invalid credentials")
-            return redirect("store")
+            return redirect("login")
     format = RegisterForm()
     return render(request, "login.html" , {"form": format})
 
@@ -93,7 +93,6 @@ def my_account(request):
             for msg in form.errors:
                 messages.error(request, msg)
                 messages.error(request, form.errors[msg])
-            render(request, "my_account.html" , {"form": form})
     
     user = Customer.objects.get(user__id=request.user.id)
     user_form = UserForm(instance=request.user)        
@@ -144,6 +143,7 @@ def clear_cart(request):
 
 def checkout(request):
     cart = Cart(request)
+    error = None
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -159,10 +159,7 @@ def checkout(request):
             messages.success(request, "Order placed successfully")
             return redirect("store")
         else:
-            for msg in form.errors:
-                messages.error(request, msg)
-                messages.error(request, form.errors[msg])
-            return redirect("checkout")
+            error = str(form.errors.as_text())   
     if cart.__len__() == 0:
         return JsonResponse({"msg": "Your cart is empty!"})
     else:
@@ -170,7 +167,7 @@ def checkout(request):
         if request.user.is_authenticated:
             user = Customer.objects.get(user__id=request.user.id)
             form = OrderForm(initial={"full_name": f"{user.user.first_name} {user.user.last_name}", "email": user.user.email, "address": user.address, "phone": user.phone, "city": user.city, "zip_code": user.postal_code})
-        return render(request, "checkout.html" , {"form": form})
+        return render(request, "checkout.html" , {"form": form, "error": error})
     
 
 def update_user(request):

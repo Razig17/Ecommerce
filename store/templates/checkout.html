@@ -1,6 +1,22 @@
 {% extends "index.html" %}
 {% block content %}
 	
+{% if messages %}
+{% for message in messages %}
+<script>
+        alertify.set('notifier','position', 'top-right');
+        alertify.error("{{ message }}");
+</script>
+{% endfor %}
+{% endif %}
+
+{% if error %}
+<div class="alert alert-danger fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ error }}
+      </div>
+{% endif %}
+
 
 		<!-- NAVIGATION -->
 		<nav id="navigation">
@@ -129,7 +145,27 @@
                         $(document).ready(function() {
                             $('.order-submit').on('click', function(e) {
                                 e.preventDefault();
-                                $('.checkoutForm').submit();
+                                
+                                // Check if the form is filled
+                                var isValid = true;
+                                $('.checkoutForm').find('input, select, textarea').each(function() {
+                                    if ($(this).prop('required')) {
+                                        if (!$(this).val()) {
+                                            isValid = false;
+                                            $(this).addClass('is-invalid'); // Add a class to highlight the empty field
+                                        } else {
+                                            $(this).removeClass('is-invalid'); // Remove the class if the field is filled
+                                        }
+                                    }
+                                });
+                    
+                                if (isValid) {
+                                    $('.checkoutForm').submit();
+                                } else {
+                                        alertify.set('notifier','position', 'top-right');
+                                        alertify.error("Please fill in all required fields.");
+                                    
+                                }
                             });
                         });
                     </script>

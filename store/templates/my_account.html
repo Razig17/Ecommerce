@@ -20,14 +20,21 @@
         </div>
         <!-- /container -->
                 {% if messages %}
-                        {% for message in messages %}
-                        <div class="alert alert-danger fade in">
-                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                {{ message }}
-                              </div>
-                        {% endfor %}
-                {% endif %}
 
+                {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    </div>
+                {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
 
 <!-- BREADCRUMB -->
 <div id="breadcrumb" class="section">
