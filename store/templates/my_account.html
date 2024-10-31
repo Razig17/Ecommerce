@@ -58,7 +58,7 @@
                                         <form method="POST">
                                                 {% csrf_token %}
                                                 {{ form.as_p }}
-                                    <center><button type="submit" class="primary-btn">Update info</button></center>
+                                    <center><button type="submit" class="primary-btn">Update shipping info</button></center>
                                   </form>
                                 </div>
                              
@@ -68,7 +68,26 @@
 
                 </div>
                 <!-- /SECTION -->
+        <!-- SECTION -->
+        <div class="section" style="padding-top: 0;">
+                <!-- container -->
+                        <!-- row -->
+                        <div class="row ">
+                                <!-- Product tab -->
+                                <div class="col-md-6 col-md-push-4 col-lg-4 ">
+                                        <form method="POST" action="{% url 'update_user' %}">
+                                                {% csrf_token %}
+                                                {{ user_form.as_p }}
+                                    <center><button type="submit" class="primary-btn">Update user info</button></center>
+                                  </form>
+                                </div>
+                             
+                        </div>
+                                <!-- /row -->
+                        
 
+                </div>
+                <!-- /SECTION -->
         
 
 

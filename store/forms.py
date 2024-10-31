@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from .models import Customer
+from .models import Customer, Order
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
@@ -62,3 +62,52 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['phone', 'address', 'city', 'postal_code', 'country']
+
+class UserForm(UserChangeForm):
+    password = None
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'})
+    )
+
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'})
+    )
+
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+class OrderForm(forms.ModelForm):
+    full_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Full Name'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'input', 'placeholder': 'Email', 'type': 'email'})
+    )
+    address = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Address'})
+    )
+    phone = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Phone Number'})
+    )
+    city = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'City'})
+    )
+    zip_code = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Postal Code'})
+    )
+
+    class Meta:
+        model = Order
+        fields = ['full_name', 'email', 'address', 'phone', 'city', 'zip_code']
