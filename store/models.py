@@ -44,17 +44,31 @@ class Customer(models.Model):
 
 # Order model
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    full_name = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)   
     created_at = models.DateTimeField(default=timezone.now)
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     completed = models.BooleanField(default=False)
+    amount = models.DecimalField(max_digits=9, decimal_places=2, default=0)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    zip_code = models.CharField(max_length=10 ,blank=True, null=True)
+    is_shipped = models.BooleanField(default=False)
+    shipped_at = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return str(self.id)
+
+#Order item model
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
     def __str__(self):
-        return self.Product
-
+        return f"Order item {self.product.name} for order {self.order.id}"
+    
 
 # Create a signal to create a customer when a user is created
 def create_customer(sender, instance, created, **kwargs):

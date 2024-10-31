@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Product, Customer
+from .models import Product, Customer, OrderItem, Order
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import RegisterForm, CustomerForm
+from .forms import RegisterForm, CustomerForm ,UserForm, OrderForm
 from .cart import Cart
 from django.http import JsonResponse
 
@@ -92,10 +92,11 @@ def my_account(request):
                 messages.error(request, msg)
                 messages.error(request, form.errors[msg])
             render(request, "my_account.html" , {"form": form})
-
-    user = Customer.objects.get(user__id=request.user.id)        
+    
+    user = Customer.objects.get(user__id=request.user.id)
+    user_form = UserForm(instance=request.user)        
     form = CustomerForm(instance=user)
-    return render(request, "my_account.html" , {"form": form})
+    return render(request, "my_account.html" , {"form": form , "user_form": user_form})
 
 
 def cart(request):
@@ -113,12 +114,14 @@ def add_to_cart(request, id):
             msg = 'Products added to cart'
         return JsonResponse({"qty": cart.__len__(), "total_price": cart.get_total_price(), "msg": msg})
     
+
 def remove_from_cart(request, id):
     cart = Cart(request)
     product = Product.objects.get(id=id)
     cart.remove_item(product)
     messages.success(request, "Product removed from cart")
     return redirect("cart")
+
 
 def update_cart(request, id):
     if request.method == "POST":
@@ -129,9 +132,55 @@ def update_cart(request, id):
         msg = 'Product quantity updated'
         return JsonResponse({"total_price": cart.get_total_price(), "msg": msg, "qty": cart.__len__()})
 
+
 def clear_cart(request):
     cart = Cart(request)
     cart.clear()
     messages.success(request, "Cart cleared")
     return redirect("cart")
 
+
+def checkout(request):
+    cart = Cart(request)
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user = request.user
+            order.amount = cart.get_total_price()
+            order.save()
+            for item in cart.cart.values():
+                print(item)
+                order_item = OrderItem(order=order, product=Product.objects.get(id=item["id"]), quantity=item["quantity"], price=item["price"])
+                order_item.save()
+            cart.clear()
+            messages.success(request, "Order placed successfully")
+            return redirect("store")
+        else:
+            for msg in form.errors:
+                messages.error(request, msg)
+                messages.error(request, form.errors[msg])
+            return redirect("checkout")
+    if cart.__len__() == 0:
+        return JsonResponse({"msg": "Your cart is empty!"})
+    else:
+        form = OrderForm()
+        if request.user.is_authenticated:
+            user = Customer.objects.get(user__id=request.user.id)
+            form = OrderForm(initial={"full_name": f"{user.user.first_name} {user.user.last_name}", "email": user.user.email, "address": user.address, "phone": user.phone, "city": user.city, "zip_code": user.postal_code})
+        return render(request, "checkout.html" , {"form": form})
+    
+
+def update_user(request):
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id)
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account updated")
+        else:
+            for msg in form.errors:
+                messages.error(request, msg)
+                messages.error(request, form.errors[msg])
+            return redirect("my_account")
+    return redirect("my_account")
