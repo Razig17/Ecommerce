@@ -135,7 +135,7 @@
 										</div>
 										<div class="cart-btns">
 											<a href="{% url 'cart' %}">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+											<a id="checkout_link" href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									</div>
 								</div>
@@ -209,7 +209,7 @@
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
 									<li><a href="{% url 'my_account' %}">My Account</a></li>
-									<li><a href="#">View Cart</a></li>
+									<li><a href="{% url 'cart' %}">View Cart</a></li>
 									<li><a href="#">Wishlist</a></li>
 
 								</ul>
@@ -252,6 +252,29 @@
 		
 		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/main.js' %}"></script>
+                <script>
+                        $('#checkout_link').on('click', function() {
+                        $.ajax({
+                                type: 'GET',
+                                url: '/checkout/',
+                                success: function(data) {
+                                if (data.msg) {
+                                alertify.set('notifier','position', 'top-right');
+                                alertify.error(data.msg);
+                                console.log("empty")
+                                } else {
+                                window.location.href = '/checkout/';
+                                console.log("not empty")
+                                }
+                                },
+                                error: function(data) {
+                                alertify.set('notifier','position', 'top-right');
+                                alertify.error('Error checking out');
+                                }
+                        });
+                        });
+
+                </script>
 
 	</body>
 </html>
