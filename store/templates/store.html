@@ -23,10 +23,10 @@
 <!-- /container -->
 {% if messages %}
 {% for message in messages %}
-<div class="alert alert-success fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        {{ message }}
-      </div>
+<script>
+        alertify.set('notifier','position', 'top-right');
+        alertify.success("{{ message }}");
+</script>
 {% endfor %}
 {% endif %}
 
