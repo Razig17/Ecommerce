@@ -8,7 +8,9 @@ from .cart import Cart
 from django.http import JsonResponse
 
 def index(request):
-    return render(request, "index.html" , {})
+    smartphones = Product.objects.filter(category__name="smartphones")[:4]
+    laptops = Product.objects.filter(category__name="laptops")[:4]
+    return render(request, "home.html" , {"products": smartphones, "laptops": laptops})
 
 
 def store(request):
