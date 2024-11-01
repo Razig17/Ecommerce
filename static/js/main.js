@@ -18,6 +18,10 @@
     var product_id = $(this).data('product_id');
     var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
     var qty = $('#quantity-input').val() || 1;
+    
+    if (qty < 2) {
+      var qty = $('#quantity-input' + product_id).val() || 1;
+    }
     $.ajax({
         type: 'POST',
         url: '/add_to_cart/' + product_id,
