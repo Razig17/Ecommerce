@@ -78,16 +78,16 @@
                                                                                 </div>
                                                                                 <div class="product-body">
                                                                                         <p class="product-category">{{product.category}}</p>
-                                                                                        <h3 class="product-name"><a href="{{product.id}}">{{product.name}}</a></h3>
+                                                                                        <h3 class="product-name"><a href="{% url 'product' product.id %}">{{product.name}}</a></h3>
                                                                                         <h4 class="product-price">${{product.price}}</h4>
                                                                                         
                                                                                         <div class="product-btns">
-                                                                                                <a href="/wishlist">
+                                                                                                <a href="{% url 'add_to_wishlist' product.id %}" class="add-to-wishlist-btn" data-product_id="{{product.id}}">
                                                                                                 <button class="add-to-wishlist"><i
                                                                                                                 class="fa fa-heart-o"></i><span
                                                                                                                 class="tooltipp">add to wishlist</a>
                                                                                                                 </span></button>
-                                                                                                <a href="{{product.id}}">
+                                                                                                <a href="{% url 'product' product.id %}">
                                                                                                 <button class="quick-view"><i 
                                                                                                         class="fa fa-eye"></i><span 
                                                                                                         class="tooltipp">view</a>
@@ -148,11 +148,13 @@
                                                                                         </div>
                                                                                         <div class="product-body">
                                                                                                 <p class="product-category">{{product.category}}</p>
-                                                                                                <h3 class="product-name"><a href="{{product.id}}">{{product.name}}</a></h3>
+                                                                                                <h3 class="product-name"><a href="{% url 'product' product.id %}">{{product.name}}
+                                                                                                        
+                                                                                                </a></h3>
                                                                                                 <h4 class="product-price">${{product.price}}</h4>
                                                                                                 
                                                                                                 <div class="product-btns">
-                                                                                                        <a href="/wishlist">
+                                                                                                        <a href="{% url 'add_to_wishlist' product.id %}" class="add-to-wishlist-btn" data-product_id="{{product.id}}">
                                                                                                         <button class="add-to-wishlist"><i
                                                                                                                         class="fa fa-heart-o"></i><span
                                                                                                                         class="tooltipp">add to wishlist</a>

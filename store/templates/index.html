@@ -90,10 +90,10 @@
 							<div class="header-ctn">
 								<!-- Wishlist -->
 								<div>
-									<a href="#">
+									<a href="{% url 'wishlist' %}">
 										<i class="fa fa-heart-o"></i>
 										<span>Your Wishlist</span>
-										<div class="qty">0</div>
+										<div class="qty">{{wishlist}}</div>
 									</a>
 								</div>
 								<!-- /Wishlist -->
@@ -274,6 +274,35 @@
                         });
                         });
 
+                        
+                </script>
+                <script>
+                        $('.add-to-wishlist-btn').on('click',  function(e) {
+                        e.preventDefault();
+                        var product_id = $(this).data('product_id');
+                        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                        $.ajax({
+                        type: 'POST',
+                        url: '/add_to_wishlist/' + product_id,
+                        data: {
+                                product_id: product_id,
+                                csrfmiddlewaretoken: csrf_token
+                        },
+                        success: function(data) {
+                                alertify.set('notifier','position', 'top-right');
+                                if (data.msg) {
+                                        alertify.success(data.msg);                                                                 
+                                } else if (data.error) {
+                                        alertify.error(data.error);
+                                }
+                                $('.qty').html(data.qty);
+                        },
+                        error: function() {
+                                alertify.set('notifier','position', 'top-right');
+                                alertify.error('Error adding product to cart');
+                        }
+                        });
+                        });
                 </script>
 
 	</body>

@@ -183,3 +183,49 @@ def update_user(request):
                 messages.error(request, form.errors[msg])
             return redirect("my_account")
     return redirect("my_account")
+
+
+
+def wishlist(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"msg": "You need to be logged in to view your wish list"})
+    user = Customer.objects.get(user__id=request.user.id)
+    product_ids = user.wishlist.keys()
+    products = Product.objects.filter(id__in=product_ids)
+    return render(request, "wishlist.html", {"products": products})
+
+
+def add_to_wishlist(request, id):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "You need to be logged in to add items to the wish list"})
+        user = Customer.objects.get(user__id=request.user.id)
+        if str(id) in user.wishlist:
+            return JsonResponse({"error": "Product already in wishlist"})
+        user.wishlist[str(id)] = 1
+        user.save()
+        return JsonResponse({"msg": "Product added to wishlist", "qty": len(user.wishlist)})
+    return render(request, "wishlist.html" , {})
+
+
+def remove_from_wishlist(request, id):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"msg": "You need to be logged in to remove items from the wish list"})
+        user = Customer.objects.get(user__id=request.user.id)
+        if str(id) not in user.wishlist:
+            return JsonResponse({"msg": "Product not in wishlist"})
+        del user.wishlist[str(id)]
+        user.save()
+        return redirect("wishlist")
+    return redirect("wishlist")
+
+def clear_wishlist(request):
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({"msg": "You need to be logged in to clear the wish list"})
+        user = Customer.objects.get(user__id=request.user.id)
+        user.wishlist = {}
+        user.save()
+        redirect("store")
+    return redirect("wishlist")

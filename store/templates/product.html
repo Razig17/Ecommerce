@@ -109,10 +109,12 @@
                                                                         }
                                                                     });
                                                                 });
+                                                                
+
                                                             </script>
 
 							<ul class="product-btns">
-								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
+								<li><a class="add-to-wishlist-btn" data-product_id="{{product.id}}" href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
 							</ul>
 
 							<ul class="product-links">
@@ -120,7 +122,7 @@
 								<li><a href="{{ product.category }}">{{ product.category }}</a></li>
 							</ul>
 
-
+                                                        
 						</div>
 					</div>
 					<!-- /Product details -->

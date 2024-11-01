@@ -59,7 +59,7 @@
                                                                 <h4 class="product-price">${{product.price}}</h4>
                                                                 
                                                                 <div class="product-btns">
-                                                                        <a href="/wishlist">
+                                                                        <a href="{% url 'add_to_wishlist' product.id %}" class="add-to-wishlist-btn" data-product_id="{{product.id}}">
                                                                         <button class="add-to-wishlist"><i
                                                                                         class="fa fa-heart-o"></i><span
                                                                                         class="tooltipp">add to wishlist</a>
