@@ -196,7 +196,10 @@ def checkout(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
-            order.user = request.user
+            if request.user.is_authenticated:
+                order.user = request.user
+            else:
+                order.user = None
             order.amount = cart.get_total_price()
             order.save()
             for item in cart.cart.values():
