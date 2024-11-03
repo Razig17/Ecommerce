@@ -1,9 +1,14 @@
+"""Forms for the store app."""
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Customer, Order
 
 class RegisterForm(UserCreationForm):
+    """
+    A form for creating new users. Includes all the required
+    fields, plus a repeated password.
+    """
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email', 'type': 'email'})
@@ -33,11 +38,17 @@ class RegisterForm(UserCreationForm):
     )
 
     class Meta:
+        """
+        Meta class to specify the model and fields to include in the form.
+        """
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
 
 class CustomerForm(forms.ModelForm):
+    """
+    A form for updating customer information.
+    """
     phone = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'})
@@ -60,10 +71,16 @@ class CustomerForm(forms.ModelForm):
     )
 
     class Meta:
+        """
+        Meta class to specify the model and fields to include in the form.
+        """
         model = Customer
         fields = ['phone', 'address', 'city', 'postal_code', 'country']
 
 class UserForm(UserChangeForm):
+    """
+    A form for updating user information.
+    """
     password = None
     first_name = forms.CharField(
         required=True,
@@ -78,11 +95,17 @@ class UserForm(UserChangeForm):
 
 
     class Meta:
+        """
+        Meta class to specify the model and fields to include in the form.
+        """
         model = User
         fields = ['first_name', 'last_name']
 
 
 class OrderForm(forms.ModelForm):
+    """
+    A form for creating an order address informations.
+    """
     full_name = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Full Name'})
@@ -109,5 +132,8 @@ class OrderForm(forms.ModelForm):
     )
 
     class Meta:
+        """
+        Meta class to specify the model and fields to include in the form.
+        """
         model = Order
         fields = ['full_name', 'email', 'address', 'phone', 'city', 'zip_code']

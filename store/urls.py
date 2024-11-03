@@ -1,3 +1,11 @@
+"""
+This module contains the URL patterns for the store application, mapping
+URLs to their corresponding view functions.
+
+Each URL pattern is associated with a view function that handles the
+request and returns a response.
+"""
+
 from django.urls import path, include
 from . import views
 urlpatterns = [

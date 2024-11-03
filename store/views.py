@@ -1,3 +1,6 @@
+"""
+This module contains the views for the store application, which handles the HTTP requests and return responses.
+"""
 from django.shortcuts import render, redirect
 from .models import Product, Customer, OrderItem, Order
 from django.contrib.auth import authenticate, login, logout
@@ -8,12 +11,18 @@ from .cart import Cart
 from django.http import JsonResponse
 
 def index(request):
+    """
+    View function for the home page.
+    """
     smartphones = Product.objects.filter(category__name="smartphones")[:4]
     laptops = Product.objects.filter(category__name="laptops")[:4]
     return render(request, "home.html" , {"products": smartphones, "laptops": laptops})
 
 
 def store(request):
+    """
+    View function for the store page.
+    """
     query = request.GET.get('query', (""))
     category = request.GET.get('category', 0)
     if category == "0":
@@ -26,22 +35,34 @@ def store(request):
 
 
 def smartphones(request):
+    """
+    View function for the smartphones page.
+    """
     products = Product.objects.filter(category__name="smartphones")
     return render(request, "smartphones.html" , {"products": products})
 
 
 def laptops(request):
+    """
+    View function for the laptops page
+    """
     products = Product.objects.filter(category__name="laptops")
     return render(request, "laptops.html" , {"products": products})
 
 
 def product(request, id):
+    """
+    View function for the product page.
+    """
     product = Product.objects.get(id=id)
     return render(request, "product.html" , {"product": product})
 
 
 
 def login_user(request):
+    """
+    View function for the login page.
+    """
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -58,12 +79,18 @@ def login_user(request):
 
 
 def logout_user(request):
+    """
+    View function for logging out the user.
+    """
     logout(request)
     messages.success(request, "You have been logged out")
     return redirect("store")
 
 
 def register_user(request):
+    """
+    View function for the registration page.
+    """
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -79,6 +106,9 @@ def register_user(request):
 
 
 def my_account(request):
+    """
+    View function for the account page
+    """
     if not request.user.is_authenticated:
         messages.error(request, "You need to be logged in")
         return redirect("login")
@@ -101,10 +131,16 @@ def my_account(request):
 
 
 def cart(request):
+    """
+    View function for the cart page.
+    """
     return render(request, "cart.html" , {})
 
 
 def add_to_cart(request, id):
+    """
+    View function for adding a product to the cart.
+    """
     if request.method == "POST":    
         qty = request.POST.get('qty', 1)
         cart = Cart(request)
@@ -117,6 +153,9 @@ def add_to_cart(request, id):
     
 
 def remove_from_cart(request, id):
+    """
+    View function for removing a product from the cart.
+    """
     cart = Cart(request)
     product = Product.objects.get(id=id)
     cart.remove_item(product)
@@ -125,6 +164,9 @@ def remove_from_cart(request, id):
 
 
 def update_cart(request, id):
+    """
+    View function for updating the quantity of a product in the cart.
+    """
     if request.method == "POST":
         qty = request.POST.get('qty', 1)
         cart = Cart(request)
@@ -135,6 +177,9 @@ def update_cart(request, id):
 
 
 def clear_cart(request):
+    """
+    View function for clearing the cart.
+    """
     cart = Cart(request)
     cart.clear()
     messages.success(request, "Cart cleared")
@@ -142,6 +187,9 @@ def clear_cart(request):
 
 
 def checkout(request):
+    """
+    View function for the checkout page.
+    """
     cart = Cart(request)
     error = None
     if request.method == 'POST':
@@ -152,7 +200,6 @@ def checkout(request):
             order.amount = cart.get_total_price()
             order.save()
             for item in cart.cart.values():
-                print(item)
                 order_item = OrderItem(order=order, product=Product.objects.get(id=item["id"]), quantity=item["quantity"], price=item["price"])
                 order_item.save()
             cart.clear()
@@ -171,6 +218,9 @@ def checkout(request):
     
 
 def update_user(request):
+    """
+    View function for updating user information.
+    """
     if request.method == 'POST':
         user = User.objects.get(id=request.user.id)
         form = UserForm(request.POST, instance=user)
@@ -187,6 +237,9 @@ def update_user(request):
 
 
 def wishlist(request):
+    """
+    View function for the wish list page.
+    """
     if not request.user.is_authenticated:
         return JsonResponse({"msg": "You need to be logged in to view your wish list"})
     user = Customer.objects.get(user__id=request.user.id)
@@ -196,6 +249,9 @@ def wishlist(request):
 
 
 def add_to_wishlist(request, id):
+    """
+    View function for adding a product to the wish list.
+    """
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({"error": "You need to be logged in to add items to the wish list"})
@@ -209,6 +265,9 @@ def add_to_wishlist(request, id):
 
 
 def remove_from_wishlist(request, id):
+    """
+    View function for removing a product from the wish list.
+    """
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({"msg": "You need to be logged in to remove items from the wish list"})
@@ -221,6 +280,9 @@ def remove_from_wishlist(request, id):
     return redirect("wishlist")
 
 def clear_wishlist(request):
+    """
+    View function for clearing the wish list.
+    """
     if request.method == "POST":
         if not request.user.is_authenticated:
             return JsonResponse({"msg": "You need to be logged in to clear the wish list"})
